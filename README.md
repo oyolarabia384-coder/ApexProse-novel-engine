@@ -1,8 +1,13 @@
 极文造物 (Novel Engine) v1.0
 这是一个基于 FastAPI + React 构建的 AI 长篇小说自动化写作与管理平台。
 
-<details open>
-<summary>中文（点击切换）</summary>
+<div>
+<a href="#zh" style="color:#1e8a7a;text-decoration:underline;font-weight:700;">中文</a>
+<span> / </span>
+<a href="#en" style="color:#1e8a7a;text-decoration:underline;font-weight:700;">English</a>
+</div>
+
+<a id="zh"></a>
 
 项目介绍
 极文造物是一套面向长篇网文生产的 AI 自动化引擎，强调“全流程、可持续、可进化”。它把从世界观设定、阶段规划、人物卡、事件链到正文生产的流程打通，并为长篇连载的稳定性和可维护性提供工程级保障。
@@ -40,10 +45,7 @@ Telegram：@dandan9977
 许可证
 本项目采用 MIT 许可证。您可以自由地使用、修改和分发代码，但请保留原作者版权声明。
 
-</details>
-
-<details>
-<summary>English (Click to toggle)</summary>
+<a id="en"></a>
 
 Overview
 Novel Engine is a production-grade AI platform for long-form fiction. It connects worldbuilding, stage planning, character design, event chains, and chapter drafting into a single, maintainable workflow—built for continuity, scalability, and delivery speed.
@@ -81,7 +83,6 @@ This project is for technical exchange and architectural discussion only. The au
 License
 This project is licensed under the MIT License. You are free to use, modify, and distribute the code with attribution.
 
-</details>
 
 数据存储：
 系统使用轻量级 SQLite，每本小说的数据独立存储在 backend/data/ 下。
