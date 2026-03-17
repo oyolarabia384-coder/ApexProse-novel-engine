@@ -1,4 +1,5 @@
 import React from "react";
+import { buildApiUrl } from "../apiBase";
 
 export default function CharacterDrawer({
   editingCharacter,
@@ -176,7 +177,7 @@ export default function CharacterDrawer({
           <button
             className="primary"
             onClick={async () => {
-              await fetch(`http://localhost:8000/api/novels/${selectedNovel}/characters/${encodeURIComponent(editingCharacter.name)}`, {
+              await fetch(buildApiUrl(`/api/novels/${selectedNovel}/characters/${encodeURIComponent(editingCharacter.name)}`), {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(editingCharacter),

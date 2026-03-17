@@ -1,4 +1,5 @@
 import React from "react";
+import { buildApiUrl } from "../apiBase";
 
 export default function EventDrawer({
   editingEvent,
@@ -588,7 +589,7 @@ export default function EventDrawer({
             className="primary"
             onClick={async () => {
               try {
-                const res = await fetch(`http://localhost:8000/api/novels/${selectedNovel}/events/${editingEvent.event_id}`, {
+                const res = await fetch(buildApiUrl(`/api/novels/${selectedNovel}/events/${editingEvent.event_id}`), {
                   method: "PUT",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify(editingEvent),

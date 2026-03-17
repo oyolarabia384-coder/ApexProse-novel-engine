@@ -1,4 +1,5 @@
 import React from "react";
+import { buildApiUrl } from "../apiBase";
 
 export default function ChapterDrawer({ editingChapter, setEditingChapter, selectedNovel, loadNovelDetails }) {
   if (!editingChapter) return null;
@@ -57,7 +58,7 @@ export default function ChapterDrawer({ editingChapter, setEditingChapter, selec
           <button
             className="primary"
             onClick={async () => {
-              await fetch(`http://localhost:8000/api/novels/${selectedNovel}/chapters/${editingChapter.chapter_num}`, {
+              await fetch(buildApiUrl(`/api/novels/${selectedNovel}/chapters/${editingChapter.chapter_num}`), {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(editingChapter),

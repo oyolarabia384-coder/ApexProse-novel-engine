@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { buildApiUrl } from "./apiBase";
 import AppSidebar from "./components/AppSidebar";
 import ConsolePage from "./components/ConsolePage";
 import AppTopbar from "./components/AppTopbar";
@@ -705,7 +706,7 @@ function App() {
   };
 
   const callApi = async (path, body) => {
-    const res = await fetch(`http://localhost:8000${path}`, {
+    const res = await fetch(buildApiUrl(path), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -718,7 +719,7 @@ function App() {
   };
 
   const fetchConfig = async () => {
-    const res = await fetch("http://localhost:8000/api/config");
+    const res = await fetch(buildApiUrl("/api/config"));
     if (!res.ok) return;
     const data = await res.json();
     const rawProfiles = data.api_profiles || defaultApiProfiles;
@@ -779,7 +780,7 @@ function App() {
   const testCurrentApiConfig = async () => {
     setTestingApi(true);
     try {
-      const res = await fetch("http://localhost:8000/api/config/test", {
+      const res = await fetch(buildApiUrl("/api/config/test"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(serializeApiConfig(api)),
@@ -852,7 +853,7 @@ function App() {
 
   const exportSection = async (section, body = {}) => {
     if (!selectedNovel) return;
-    const res = await fetch(`http://localhost:8000/api/novels/${selectedNovel}/export/${section}`, {
+    const res = await fetch(buildApiUrl(`/api/novels/${selectedNovel}/export/${section}`), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -875,7 +876,7 @@ function App() {
     if (!selectedNovel || !file) return;
     const formData = new FormData();
     formData.append("file", file);
-    const res = await fetch(`http://localhost:8000/api/novels/${selectedNovel}/import/${section}`, {
+    const res = await fetch(buildApiUrl(`/api/novels/${selectedNovel}/import/${section}`), {
       method: "POST",
       body: formData,
     });
@@ -894,7 +895,7 @@ function App() {
   };
 
   const loadNovels = async () => {
-    const res = await fetch("http://localhost:8000/api/novels");
+    const res = await fetch(buildApiUrl("/api/novels"));
     if (!res.ok) return;
     const data = await res.json();
     const nextNovels = data.novels || [];
@@ -912,7 +913,7 @@ function App() {
     const targetWords = Math.max(10000, Number(novelPlanDrafts[novelId]) || 500000);
     setSavingNovelPlanId(novelId);
     try {
-      const res = await fetch(`http://localhost:8000/api/novels/${novelId}/plan`, {
+      const res = await fetch(buildApiUrl(`/api/novels/${novelId}/plan`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ target_words: targetWords }),
@@ -937,7 +938,7 @@ function App() {
   const updateInitStepState = async (stepKey, state) => {
     if (!selectedNovel) return;
     try {
-      const res = await fetch(`http://localhost:8000/api/novels/${selectedNovel}/init-steps`, {
+      const res = await fetch(buildApiUrl(`/api/novels/${selectedNovel}/init-steps`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ step_key: stepKey, state }),
@@ -954,13 +955,13 @@ function App() {
   const deleteNovelById = async (novelId) => {
     const first = await confirmAction("确定删除该小说吗？");
     if (!first) return;
-    const res = await fetch(`http://localhost:8000/api/novels/${novelId}`, { method: "DELETE" });
+    const res = await fetch(buildApiUrl(`/api/novels/${novelId}`), { method: "DELETE" });
     if (!res.ok) return;
     const data = await res.json();
     if (data.status === "confirm") {
       const second = await confirmAction(`该小说已有 ${data.chapters} 章内容，确认彻底删除？`);
       if (!second) return;
-      await fetch(`http://localhost:8000/api/novels/${novelId}?force=true`, { method: "DELETE" });
+      await fetch(buildApiUrl(`/api/novels/${novelId}?force=true`), { method: "DELETE" });
     }
     if (selectedNovel === novelId) {
       setSelectedNovel(null);
@@ -971,7 +972,7 @@ function App() {
   const clearChaptersByNovel = async (novelId) => {
     const confirmed = await confirmAction("确定清空当前小说的所有章节，并将全部事件重置为 planned 吗？");
     if (!confirmed) return;
-    const res = await fetch(`http://localhost:8000/api/novels/${novelId}/chapters`, { method: "DELETE" });
+    const res = await fetch(buildApiUrl(`/api/novels/${novelId}/chapters`), { method: "DELETE" });
     if (!res.ok) {
       notify(`清空章节失败：${extractErrorMessage(await res.text())}`, "error");
       return;
@@ -983,7 +984,7 @@ function App() {
   const deleteSingleChapter = async (novelId, chapterNum) => {
     const confirmed = await confirmAction(`确定删除第 ${chapterNum} 章吗？`);
     if (!confirmed) return;
-    const res = await fetch(`http://localhost:8000/api/novels/${novelId}/chapters/${chapterNum}`, { method: "DELETE" });
+    const res = await fetch(buildApiUrl(`/api/novels/${novelId}/chapters/${chapterNum}`), { method: "DELETE" });
     if (!res.ok) {
       notify(`删除章节失败：${extractErrorMessage(await res.text())}`, "error");
       return;
@@ -994,7 +995,7 @@ function App() {
   };
 
   const loadJobs = async () => {
-    const res = await fetch("http://localhost:8000/api/jobs");
+    const res = await fetch(buildApiUrl("/api/jobs"));
     if (!res.ok) return;
     const data = await res.json();
     const jobs = data.jobs || [];
@@ -1003,7 +1004,7 @@ function App() {
   };
 
   const loadPrompts = async () => {
-    const res = await fetch(`http://localhost:8000${buildPromptApiPath("/api/prompts")}`);
+    const res = await fetch(buildApiUrl(buildPromptApiPath("/api/prompts")));
     if (!res.ok) return;
     const data = await res.json();
     if (data.prompts) {
@@ -1020,13 +1021,13 @@ function App() {
   };
 
   const loadPromptBackups = async () => {
-    const res = await fetch(`http://localhost:8000${buildPromptApiPath("/api/prompts/backups")}`);
+    const res = await fetch(buildApiUrl(buildPromptApiPath("/api/prompts/backups")));
     if (!res.ok) return;
     const data = await res.json();
     setPromptBackups(data.backups || []);
   };
 
-    const savePrompts = async () => {
+  const savePrompts = async () => {
     const required = currentPromptMeta.variables || [];
     const combinedPromptValue = `${promptValue.system_prompt || ""}\n${promptValue.user_prompt || ""}`;
     const missing = required.filter((token) => !combinedPromptValue.includes(token));
@@ -1049,7 +1050,7 @@ function App() {
   const resetPrompts = async () => {
     const ok = await confirmAction("确定恢复全部系统默认提示词吗？当前提示词会先自动备份。");
     if (!ok) return;
-    const res = await fetch(`http://localhost:8000${buildPromptApiPath("/api/prompts/reset")}`, {
+    const res = await fetch(buildApiUrl(buildPromptApiPath("/api/prompts/reset")), {
       method: "POST",
     });
     if (!res.ok) {
@@ -1072,7 +1073,7 @@ function App() {
   const resetCurrentPrompt = async () => {
     const ok = await confirmAction(`确定将 ${promptLabels[promptMenu] || promptMenu} 恢复为系统默认吗？当前版本会先自动备份。`);
     if (!ok) return;
-    const res = await fetch(`http://localhost:8000${buildPromptApiPath(`/api/prompts/reset/${promptMenu}`)}`, {
+    const res = await fetch(buildApiUrl(buildPromptApiPath(`/api/prompts/reset/${promptMenu}`)), {
       method: "POST",
     });
     if (!res.ok) {
@@ -1091,7 +1092,7 @@ function App() {
   const restorePromptBackup = async (file) => {
     const ok = await confirmAction(`确定回滚到备份 ${file} 吗？当前提示词会先再次备份。`);
     if (!ok) return;
-    const res = await fetch(`http://localhost:8000${buildPromptApiPath("/api/prompts/restore")}`, {
+    const res = await fetch(buildApiUrl(buildPromptApiPath("/api/prompts/restore")), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ file }),
@@ -1112,7 +1113,7 @@ function App() {
   const deleteJob = async (jobId) => {
     const ok = await confirmAction("确定删除这条任务记录吗？");
     if (!ok) return;
-    await fetch(`http://localhost:8000/api/jobs/${jobId}`, {
+    await fetch(buildApiUrl(`/api/jobs/${jobId}`), {
       method: "DELETE",
     });
     appendLog(`已删除任务记录：${jobId}`);
@@ -1122,7 +1123,7 @@ function App() {
   const clearJobs = async () => {
     const ok = await confirmAction("确定清空全部任务历史吗？该操作不可恢复。");
     if (!ok) return;
-    await fetch("http://localhost:8000/api/jobs", {
+    await fetch(buildApiUrl("/api/jobs"), {
       method: "DELETE",
     });
     appendLog("已清空全部任务历史");
@@ -1131,7 +1132,7 @@ function App() {
 
   const pollJobStatus = async (newJobId) => {
     while (true) {
-      const res = await fetch(`http://localhost:8000/api/jobs/${newJobId}`);
+      const res = await fetch(buildApiUrl(`/api/jobs/${newJobId}`));
       if (!res.ok) throw new Error("任务状态获取失败");
       const data = await res.json();
       if (data.status === "done") return data;
@@ -1207,19 +1208,19 @@ function App() {
     if (!novelId) return;
     const loaded = {};
     const [dashRes, initRes, seedRes, summaryRes, snapshotRes, wvRes, sbRes, chRes, evRes, cpRes, lbRes, fsRes, gsRes] = await Promise.all([
-      fetch(`http://localhost:8000/api/novels/${novelId}/dashboard`),
-      fetch(`http://localhost:8000/api/novels/${novelId}/init-steps`),
-      fetch(`http://localhost:8000/api/novels/${novelId}/seed-world-setting`),
-      fetch(`http://localhost:8000/api/novels/${novelId}/worldview-summary`),
-      fetch(`http://localhost:8000/api/novels/${novelId}/opening-snapshot`),
-      fetch(`http://localhost:8000/api/novels/${novelId}/worldview`),
-      fetch(`http://localhost:8000/api/novels/${novelId}/series-blueprint`),
-      fetch(`http://localhost:8000/api/novels/${novelId}/characters`),
-      fetch(`http://localhost:8000/api/novels/${novelId}/events`),
-      fetch(`http://localhost:8000/api/novels/${novelId}/chapters`),
-      fetch(`http://localhost:8000/api/novels/${novelId}/lorebook`),
-      fetch(`http://localhost:8000/api/novels/${novelId}/foreshadows`),
-      fetch(`http://localhost:8000/api/novels/${novelId}/growth-system`),
+      fetch(buildApiUrl(`/api/novels/${novelId}/dashboard`)),
+      fetch(buildApiUrl(`/api/novels/${novelId}/init-steps`)),
+      fetch(buildApiUrl(`/api/novels/${novelId}/seed-world-setting`)),
+      fetch(buildApiUrl(`/api/novels/${novelId}/worldview-summary`)),
+      fetch(buildApiUrl(`/api/novels/${novelId}/opening-snapshot`)),
+      fetch(buildApiUrl(`/api/novels/${novelId}/worldview`)),
+      fetch(buildApiUrl(`/api/novels/${novelId}/series-blueprint`)),
+      fetch(buildApiUrl(`/api/novels/${novelId}/characters`)),
+      fetch(buildApiUrl(`/api/novels/${novelId}/events`)),
+      fetch(buildApiUrl(`/api/novels/${novelId}/chapters`)),
+      fetch(buildApiUrl(`/api/novels/${novelId}/lorebook`)),
+      fetch(buildApiUrl(`/api/novels/${novelId}/foreshadows`)),
+      fetch(buildApiUrl(`/api/novels/${novelId}/growth-system`)),
     ]);
     if (dashRes.ok) {
       const data = await dashRes.json();
@@ -1330,7 +1331,7 @@ function App() {
   };
 
   const fetchEventCheckpoints = async (novelId, eventId) => {
-    const res = await fetch(`http://localhost:8000/api/novels/${novelId}/events/${eventId}/checkpoints`);
+    const res = await fetch(buildApiUrl(`/api/novels/${novelId}/events/${eventId}/checkpoints`));
     if (!res.ok) {
       throw new Error(extractErrorMessage(await res.text()));
     }
@@ -1358,7 +1359,7 @@ function App() {
     if (!selectedNovel) return;
     setBusy(true);
     try {
-      const res = await fetch(`http://localhost:8000/api/novels/${selectedNovel}/meta`, {
+      const res = await fetch(buildApiUrl(`/api/novels/${selectedNovel}/meta`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(editingNovelMeta),
@@ -1381,7 +1382,7 @@ function App() {
     if (!selectedNovel) return;
     setBusy(true);
     try {
-      const res = await fetch(`http://localhost:8000/api/novels/${selectedNovel}/seed-world-setting`, {
+      const res = await fetch(buildApiUrl(`/api/novels/${selectedNovel}/seed-world-setting`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: worldSettingDraft }),
@@ -1404,7 +1405,7 @@ function App() {
     setBusy(true);
     try {
       const parsed = JSON.parse(blueprintDraft || "{}");
-      const res = await fetch(`http://localhost:8000/api/novels/${selectedNovel}/series-blueprint`, {
+      const res = await fetch(buildApiUrl(`/api/novels/${selectedNovel}/series-blueprint`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(parsed),
@@ -1428,7 +1429,7 @@ function App() {
     setBusy(true);
     try {
       const parsed = JSON.parse(growthDraft || "{}");
-      const res = await fetch(`http://localhost:8000/api/novels/${selectedNovel}/growth-system`, {
+      const res = await fetch(buildApiUrl(`/api/novels/${selectedNovel}/growth-system`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(parsed),
@@ -1452,7 +1453,7 @@ function App() {
     if (!selectedNovel) return;
     setBusy(true);
     try {
-      const res = await fetch(`http://localhost:8000/api/novels/${selectedNovel}/worldview-summary`, {
+      const res = await fetch(buildApiUrl(`/api/novels/${selectedNovel}/worldview-summary`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: worldviewSummaryDraft }),
@@ -1475,7 +1476,7 @@ function App() {
     if (!selectedNovel) return;
     setBusy(true);
     try {
-      const res = await fetch(`http://localhost:8000/api/novels/${selectedNovel}/opening-snapshot`, {
+      const res = await fetch(buildApiUrl(`/api/novels/${selectedNovel}/opening-snapshot`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: openingSnapshotDraft }),
@@ -1498,7 +1499,7 @@ function App() {
     if (!selectedNovel) return;
     setBusy(true);
     try {
-      const res = await fetch(`http://localhost:8000/api/novels/${selectedNovel}/worldview`, {
+      const res = await fetch(buildApiUrl(`/api/novels/${selectedNovel}/worldview`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: worldviewDraft }),
@@ -1522,7 +1523,7 @@ function App() {
     setBusy(true);
     setInitRunningStep(stepName);
     try {
-      const res = await fetch(`http://localhost:8000/api/novels/${novelId}/initialize/${stepName}`, {
+      const res = await fetch(buildApiUrl(`/api/novels/${novelId}/initialize/${stepName}`), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -1574,13 +1575,13 @@ function App() {
     if (!selectedNovel) return;
     let url = "";
     if (type === "character") {
-      url = `http://localhost:8000/api/novels/${selectedNovel}/characters/${encodeURIComponent(id)}/lock`;
+      url = buildApiUrl(`/api/novels/${selectedNovel}/characters/${encodeURIComponent(id)}/lock`);
     } else if (type === "event") {
-      url = `http://localhost:8000/api/novels/${selectedNovel}/events/${id}/lock`;
+      url = buildApiUrl(`/api/novels/${selectedNovel}/events/${id}/lock`);
     } else if (type === "chapter") {
-      url = `http://localhost:8000/api/novels/${selectedNovel}/chapters/${id}/lock`;
+      url = buildApiUrl(`/api/novels/${selectedNovel}/chapters/${id}/lock`);
     } else if (type === "lorebook") {
-      url = `http://localhost:8000/api/novels/${selectedNovel}/lorebook/${encodeURIComponent(id)}/lock`;
+      url = buildApiUrl(`/api/novels/${selectedNovel}/lorebook/${encodeURIComponent(id)}/lock`);
     }
     if (!url) return;
     await fetch(url, {
@@ -1597,7 +1598,7 @@ function App() {
     appendLog(`任务已提交：${newJobId}`);
     let lastCount = 0;
     while (true) {
-      const res = await fetch(`http://localhost:8000/api/jobs/${newJobId}`);
+      const res = await fetch(buildApiUrl(`/api/jobs/${newJobId}`));
       if (!res.ok) {
         appendLog("获取任务状态失败");
         break;

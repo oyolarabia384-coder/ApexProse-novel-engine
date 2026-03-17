@@ -1,4 +1,5 @@
 import React from "react";
+import { buildApiUrl } from "../apiBase";
 
 export default function ProductionPage({
   productionTab,
@@ -96,7 +97,7 @@ export default function ProductionPage({
                     <button
                       className="ghost"
                       onClick={async () => {
-                        await fetch(`http://localhost:8000/api/jobs/${job.job_id}/cancel`, { method: "POST" });
+                        await fetch(buildApiUrl(`/api/jobs/${job.job_id}/cancel`), { method: "POST" });
                         loadJobs();
                       }}
                     >
