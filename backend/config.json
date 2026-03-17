@@ -1,0 +1,115 @@
+{
+  "selected_api_profile": "codex_cli",
+  "api_profiles": {
+    "openai_compatible": {
+      "profile_name": "OPENAI标准配置",
+      "base_url": "https://api-vip.codex-for.me/v1",
+      "api_key": "YOUR_API_KEY",
+      "model": "gpt-5.4",
+      "main_api_path": "chat/completions",
+      "use_stream": false,
+      "wire_api": "chat_completions",
+      "review_model": null,
+      "model_provider": null,
+      "provider_name": null,
+      "model_reasoning_effort": "",
+      "disable_response_storage": false,
+      "network_access": null,
+      "windows_wsl_setup_acknowledged": false,
+      "model_context_window": null,
+      "model_auto_compact_token_limit": null,
+      "requires_openai_auth": true
+    },
+    "codex_cli": {
+      "profile_name": "OPENAI自定义配置",
+      "base_url": "https://api-vip.codex-for.me/v1",
+      "api_key": "YOUR_API_KEY",
+      "model": "gpt-5.4",
+      "main_api_path": "chat/completions",
+      "use_stream": true,
+      "wire_api": "chat_completions",
+      "review_model": null,
+      "model_provider": null,
+      "provider_name": null,
+      "model_reasoning_effort": "xhigh",
+      "disable_response_storage": false,
+      "network_access": null,
+      "windows_wsl_setup_acknowledged": false,
+      "model_context_window": null,
+      "model_auto_compact_token_limit": null,
+      "requires_openai_auth": true
+    }
+  },
+  "api": {
+    "profile_name": "OPENAI自定义配置",
+    "base_url": "https://api-vip.codex-for.me/v1",
+    "api_key": "YOUR_API_KEY",
+    "model": "gpt-5.4",
+    "main_api_path": "chat/completions",
+    "use_stream": true,
+    "wire_api": "chat_completions",
+    "review_model": null,
+    "model_provider": null,
+    "provider_name": null,
+    "model_reasoning_effort": "xhigh",
+    "disable_response_storage": false,
+    "network_access": null,
+    "windows_wsl_setup_acknowledged": false,
+    "model_context_window": null,
+    "model_auto_compact_token_limit": null,
+    "requires_openai_auth": true
+  },
+  "prompts": {
+    "prompt1_world_setting": {
+      "system_prompt": "你是长篇网文项目的世界设定总策划。你只负责输出可持续连载的世界设定，不得写解释、废话。",
+      "user_prompt": "请根据以下一句话梗概，产出可持续连载的世界设定。\n\n【一句话梗概】\n[setting]\n\n输出要求：\n1.选择一个已被熟知的世界描述差异性作为世界背景设定，逻辑要自洽，不得胡乱改编。\n2. 设定必须服务后续长篇剧情推进，设计多方势力、多维度的冲突框架。\n3. 必须给出可被后续事件复用的稳定规则，避免模糊表达。"
+    },
+    "prompt2_series_blueprint": {
+      "system_prompt": "你是长篇网文的阶段计划设计师。你必须严格遵守系统给定的节奏参数和阶段区间，只返回严格 JSON 对象；严格使用系统已经给定的阶段区间，不得擅自修改 start_event_id、end_event_id。",
+      "user_prompt": "请根据以下材料，生成“阶段计划”。只需要围绕系统给出的节奏参数，为每个阶段写清楚阶段目标、阶段要求、当前进度焦点和退出条件。\n\n【一句话梗概】\n[setting]\n\n【世界设定】\n[world_setting]\n\n【系统节奏参数】\n[system_plan]\n\n硬性要求：\n1. 只规划阶段。\n2. 阶段计划必须体现字数驱动节奏：开篇破局期做黄金开篇，发展沉淀期持续成长反馈，稳定连载期推进势力与悬念，结局期集中收束。\n3. 必须返回严格 JSON 对象，不要解释，不要 markdown。\n\n返回格式如下：\n{\n  \"story_core\": {\n    \"core_conflict\": \"全书核心冲突\",\n    \"golden_finger\": \"核心金手指/重大变故\",\n    \"short_term_goal\": \"开篇短期目标\",\n    \"mid_term_goal\": \"中期阶段目标\",\n    \"ultimate_goal\": \"终极目标\",\n    \"tone_promise\": \"持续连载卖点承诺\"\n  },\n  \"stage_plan\": [\n    {\n      \"phase\": \"opening_breakthrough/development/stable_serial/ending\",\n      \"start_event_id\": 1,\n      \"end_event_id\": 3,\n      \"phase_goal\": \"该阶段目标\",\n      \"phase_requirements\": [\"该阶段必须做到的事\"],\n      \"progress_focus\": \"当前阶段最该推进的方向\",\n      \"exit_condition\": \"何时进入下一阶段\"\n    }\n  ]\n}"
+    },
+    "prompt3_growth_system": {
+      "system_prompt": "你是长篇网文的主角成长规划设计师。你必须让成长路线与阶段计划一致，只返回严格 JSON 对象；你只负责补全阶段成长规划。",
+      "user_prompt": "请根据以下材料，补全阶段计划中的主角成长规划。\n\n【一句话梗概】\n[setting]\n\n【世界设定】\n[world_setting]\n\n【阶段计划】\n[stage_plan]\n\n【系统节奏参数】\n[system_plan]\n\n要求：\n1. 只补全阶段成长规划，不要改动阶段区间，不要重写整份阶段计划。\n2. 每个阶段都必须写清楚：growth_goal、power_goal、resource_goal、influence_goal、growth_bottleneck、growth_milestone。\n3. 阶段成长规划必须和阶段计划一致，能够解释开篇、发展、稳定连载、结局四段的升级路线。\n4. 必须返回严格 JSON 对象，不要解释。\n\n格式如下：\n{\n  \"story_core_updates\": {\n    \"short_term_goal\": \"开篇短期目标\",\n    \"mid_term_goal\": \"中期阶段目标\",\n    \"ultimate_goal\": \"终极目标\"\n  },\n  \"stage_growth_plan\": [\n    {\n      \"phase\": \"opening_breakthrough/development/stable_serial/ending\",\n      \"growth_goal\": \"该阶段的成长目标\",\n      \"power_goal\": \"该阶段的能力目标\",\n      \"resource_goal\": \"该阶段的资源目标\",\n      \"influence_goal\": \"该阶段的人脉/势力目标\",\n      \"growth_bottleneck\": \"该阶段的成长瓶颈\",\n      \"growth_milestone\": \"该阶段完成标志\"\n    }\n  ]\n}"
+    },
+    "prompt4_core_characters": {
+      "system_prompt": "你是长篇网文的核心人物策划。你必须让人物服务主线与阶段计划，只返回严格 JSON 数组；必须标注故事职能与计划事件范围。",
+      "user_prompt": "请根据世界设定、阶段计划、主角成长规划与系统节奏参数，生成核心人物卡。\n\n【系统节奏参数】\n[system_plan]\n\n要求：\n1. 需要生成开篇阶段必需角色与会长期影响主线的核心角色，特殊情况系统、金手指需要生成角色卡。不要堆砌路人。\n2. 每个人物都必须服务主线推进，并和阶段计划、主角成长目标有关。\n3. 必须写清楚该角色的故事职能、目标、动机、行为逻辑与计划事件范围。\n4. 必须显式读取【系统节奏参数】的“当前阶段区间”，人物计划事件范围必须落在该区间内；仅主角/全篇核心人物允许跨阶段或标注全篇。\n5. 每个角色必须包含 item_updates（角色初始物品/功法/势力/境界等设定），必须绑定角色，不允许 related_characters 为空。\n6. 以下字段允许留空，但不要为了填满字段而臆造：secret、catchphrase、growth_arc、sublimation_type、sublimation_seed、sublimation_trigger、sublimation_payoff。\n7. 如果没有明确升华线，has_sublimation_point 必须为 false，相关升华字段保持空字符串，sublimation_status 写 none。\n8. 必须返回严格 JSON 数组，不要解释。\n\n格式如下：\n[{\"name\": \"张三\", \"role_tier\": \"protagonist/major_support/support/functional\", \"target\": \"目标\", \"motive\": \"动机\", \"secret\": \"秘密\", \"relationship\": \"关系\", \"catchphrase\": \"口头禅\", \"growth_arc\": \"成长弧\", \"strengths\": [\"优点1\", \"优点2\"], \"flaws\": [\"缺点1\", \"缺点2\"], \"behavior_logic\": \"此人做选择时遵循的内在逻辑\", \"has_sublimation_point\": false, \"sublimation_type\": \"\", \"sublimation_seed\": \"\", \"sublimation_trigger\": \"\", \"sublimation_payoff\": \"\", \"sublimation_status\": \"none\", \"state\": \"初始状态\", \"scope_type\": \"full/range/cameo\", \"planned_event_scope_text\": \"全篇 或 1-10,12-14\", \"planned_event_ranges\": [{\"start_event_id\": 1, \"end_event_id\": 10}], \"story_function\": \"该角色在长线中的作用\", \"item_updates\": [{\"name\": \"xxx\", \"type\": \"功法/道具/势力/境界\", \"description\": \"简述设定\", \"location\": \"所在/归属\", \"related_characters\": [\"张三\"]}]}]"
+    },
+    "prompt5_worldview_summary": {
+      "system_prompt": "你是世界观摘要整理器。你必须提炼长期稳定可复用的世界观骨架，只返回严格 JSON 对象。",
+      "user_prompt": "请根据以下材料，生成“世界观摘要”，供后续初始化和事件规划复用。\n\n【一句话梗概】\n[setting]\n\n【世界设定】\n[world_setting]\n\n【阶段计划】\n[stage_plan]\n\n【主角成长规划】\n[growth_system]\n\n【核心人物卡】\n[core_characters]\n\n要求：\n1. 只总结长线稳定不易变化的世界观骨架，不要写当前章节细节。\n2. 重点写清世界秩序、关键规则、核心矛盾、主要势力、公开认知与隐藏风险。\n3. 不要重复人物卡里的目标、动机、关系，也不要重复阶段计划/成长规划里的阶段目标、成长里程碑。\n4. 内容要适合后续事件规划与章节阶段持续引用。\n5. 必须返回严格 JSON 对象，不要解释。\n\n格式如下：\n{\"worldview_summary\": \"400-900字的结构化摘要\"}"
+    },
+    "prompt6_opening_snapshot": {
+      "system_prompt": "你是世界快照整理器。你必须梳理当前时点的真实局势，只返回严格 JSON 对象。",
+      "user_prompt": "请根据以下材料，生成“世界快照”，并同时给出世界级/事件级设定库。\n\n【一句话梗概】\n[setting]\n\n【世界设定】\n[world_setting]\n\n【阶段计划】\n[stage_plan]\n\n【主角成长规划】\n[growth_system]\n\n【核心人物卡】\n[core_characters]\n\n【世界观摘要】\n[worldview_summary]\n\n要求：\n1. 只写当前时点真实存在的外部世界局势，不要提前写后续事件结果。\n2. 世界快照必须与人物卡、阶段计划、成长规划分工清晰：不要重复人物目标/动机/关系/个人状态，不要重复阶段目标、成长等级、成长瓶颈、下一里程碑。\n3. 世界快照只负责描述“此刻世界外部现实”：表层局势、暗流、区域焦点、势力结构、规则压力、资源紧张、即将引爆的外部冲突、短期触发窗口、连续性约束。\n4. `public_surface`、`hidden_undercurrent`、`regional_focus`、`power_structure`、`rule_pressure`、`resource_tension` 每项建议 60-180 字。\n5. `conflict_seeds`、`continuity_constraints` 必须返回 2-5 条数组；没有变化也要保守填写，不要留空。\n6. `world_state_shift` 在首次快照固定写“初始快照”，后续快照写“相对上一版的真实变化”。\n7. lorebook 仅包含世界级/事件级设定，不要写人物专属物品；related_characters 允许为空。\n8. 必须返回严格 JSON 对象，不要解释，不要 markdown，不要额外字段。\n\n格式如下：\n{\"opening_snapshot\": {\"snapshot_title\": \"当前快照标题\", \"time_anchor\": \"当前时间锚点\", \"public_surface\": \"普通人可见的表层局势\", \"hidden_undercurrent\": \"未公开的暗流与潜在变化\", \"regional_focus\": \"当前叙事主要区域与空间焦点\", \"power_structure\": \"当前真正起作用的势力结构与控制关系\", \"rule_pressure\": \"当前正在生效的规则、限制与代价\", \"resource_tension\": \"世界层面的稀缺资源与争夺点\", \"conflict_seeds\": [\"已存在的外部冲突种子1\", \"已存在的外部冲突种子2\"], \"trigger_window\": \"未来短期最可能引爆事件的导火索窗口\", \"world_state_shift\": \"初始快照\", \"continuity_constraints\": [\"后续写作必须持续遵守的世界连续性约束1\", \"后续写作必须持续遵守的世界连续性约束2\"]}, \"lorebook\": [{\"name\": \"设定名\", \"type\": \"势力/规则/地点/资源\", \"description\": \"简述设定\", \"location\": \"所在/归属\", \"related_characters\": []}]}"
+    },
+    "prompt7_opening_world_planning": {
+      "system_prompt": "你是长篇网文的事件规划与全局状态调度师。你必须基于当前局势生成事件因果链，并提前敲定每个事件完成后的宏观状态变动（快照、伏笔、成长、世界设定），只返回严格 JSON 数组。",
+      "user_prompt": "请基于以下材料，生成当前批次需要的“事件规划”。\n\n【一句话梗概】\n[setting]\n\n【世界观摘要】\n[worldview_summary]\n\n【世界快照】\n[opening_snapshot]\n\n【世界级设定库（lorebook）】\n[world_items]\n\n【阶段计划】\n[stage_plan]\n\n【主角成长规划】\n[growth_system]\n\n【当前阶段相关人物卡】\n[stage_characters]\n\n【系统节奏参数】\n[system_plan]\n\n[opening_event_requirements]\n\n硬性要求：\n1. 必须以因果链推进，每个事件都必须推动主线，而不是重复打怪或重复冲突。\n2. 必须显式读取【系统节奏参数】中的“当前阶段”和“阶段要求”，并让每个事件体现对应节奏。\n3. 宏观变动绝对主导：必须在事件规划阶段，直接敲定并写明该事件完成后注定引发的宏观变动（世界快照变化、主角成长结算、伏笔变动、世界级设定 Lorebook 的新增/修改）。后续正文将严格执行此规划，不得擅自改写。\n4. 如果该事件不会引发某项宏观变动，对应字段请直接返回空对象 {} 或空数组 []，不要强行制造变化。\n5. 必须返回严格 JSON 数组，不要解释，不要 markdown。\n6. 关于 payoff_event_id：若预期伏笔在本批次内明确兑现，请填具体数字整数；若是长线伏笔或未来未知事件，必须填 null。\n\n每个事件对象必须严格包含以下字段：\n- event_id\n- description\n- location\n- time_duration\n- core_conflict\n- foreshadowing\n- linked_characters\n- entering_characters\n- exiting_characters\n- goal\n- obstacle\n- cool_point_type\n- payoff_type\n- growth_reward\n- status_reward\n- cliffhanger\n- foreshadow_plan\n- world_snapshot_update\n- foreshadow_updates\n- growth_updates\n- lorebook_updates\n\n其中：foreshadow_plan 只能使用字段名 description/payoff_event_id/payoff_mode/importance；foreshadow_updates 使用 description/status/related_characters/notes；growth_updates 直接复用 growth_updates 结构；lorebook_updates 必须使用 {new_items, updated_items, removed_items}。\n\n注意：foreshadow_plan 只能使用字段名 description/payoff_event_id/payoff_mode/importance，禁止输出 seed/payoff_hint/type 等旧字段。"
+    },
+    "prompt_internal_supplement_characters": {
+      "system_prompt": "你是长篇网文的补充人物策划。你只为当前事件缺失的人物补卡，只返回严格 JSON 数组；必须标注故事职能、计划事件范围与是否退场。",
+      "user_prompt": "请根据世界设定、阶段计划、系统节奏参数、当前事件大纲和主角成长规划，补充人物卡。\n\n【系统节奏参数】\n[system_plan]\n\n要求：\n1. 只为当前事件中缺失的人物补卡，不要重复生成已有核心人物。\n2. 每个人物都必须与当前事件存在明确关系，并能解释其为何在此时出场。\n3. 人物的目标、动机、秘密之间必须彼此一致；relationship 字段请描述其与主角或关键阵营的关系。\n4. state 只写当前出场时的即时状态，不要写未来结局。\n5. 必须给出该角色的故事职能和计划事件范围；如果后续是否继续出场尚不确定，可以保守填写较短范围。\n6. 必须显式读取【系统节奏参数】的“当前阶段区间”，人物计划事件范围必须落在该区间内；仅主角/全篇核心人物允许跨阶段或标注全篇。\n7. 每个角色必须包含 item_updates（角色初始物品/功法/势力/境界等设定），必须绑定角色，不允许 related_characters 为空。\n8. 以下字段允许留空，但不要为了填满字段而臆造：secret、catchphrase、growth_arc、sublimation_type、sublimation_seed、sublimation_trigger、sublimation_payoff、return_reason。\n9. 升华点字段采用保守策略：如果只是埋下后续可能升华的种子，可以 only 填写 has_sublimation_point=true 与 sublimation_seed；若没有明确升华线，has_sublimation_point 必须为 false，相关字段留空，sublimation_status 写 none。\n10. 如果事件规划中给出了 exiting_characters，且该人物在本事件后应下线，请使用 exit_mode=retired 与 retired_after_event_id 明确标注，并补充 excluded_event_scope_text/excluded_event_ranges；如果未来必须回归，请设置 return_required=true 并填写 return_reason。\n11. planned_event_scope_text 必须使用“全篇”或“1-10,12-14”这种格式；planned_event_ranges、excluded_event_ranges 必须是结构化范围数组。\n12. 必须返回严格 JSON 数组，不要解释。\n\n格式如下：\n[{\"name\": \"张三\", \"role_tier\": \"protagonist/major_support/support/functional\", \"target\": \"目标\", \"motive\": \"动机\", \"secret\": \"\", \"relationship\": \"关系\", \"catchphrase\": \"\", \"growth_arc\": \"\", \"strengths\": [\"优点1\", \"优点2\"], \"flaws\": [\"缺点1\", \"缺点2\"], \"behavior_logic\": \"此人做选择时遵循的内在逻辑\", \"has_sublimation_point\": false, \"sublimation_type\": \"\", \"sublimation_seed\": \"\", \"sublimation_trigger\": \"\", \"sublimation_payoff\": \"\", \"sublimation_status\": \"none\", \"state\": \"当前出场状态\", \"scope_type\": \"full/range/cameo\", \"planned_event_scope_text\": \"1-10,12-14\", \"planned_event_ranges\": [{\"start_event_id\": 1, \"end_event_id\": 10}], \"excluded_event_scope_text\": \"11-11\", \"excluded_event_ranges\": [{\"start_event_id\": 11, \"end_event_id\": 11}], \"exit_mode\": \"active/paused/retired\", \"retired_after_event_id\": null, \"return_required\": false, \"return_reason\": \"\", \"story_function\": \"该角色在长线中的作用\", \"item_updates\": [{\"name\": \"xxx\", \"type\": \"功法/道具/势力/境界\", \"description\": \"简述设定\", \"location\": \"所在/归属\", \"related_characters\": [\"张三\"]}]}]"
+    },
+    "prompt11_part_plan": {
+      "system_prompt": "你是长篇网文的分段执行规划师。你只负责规划当前分段，不写正文，不输出 JSON；不得引入未说明的新主线。",
+      "user_prompt": "请只生成 [part_name] 的执行计划，不写正文。\n\n你必须参考以下材料：\n[series_note]\n[full_outline_str]\n[current_wv]\n[lorebook_str]\n[character_state_block]\n[growth_system]\n[goal]\n[obstacle]\n[cool_point_type]\n[payoff_type]\n[growth_reward]\n[status_reward]\n[cliffhanger]\n[desc]\n[foreshadow]\n\n输出要求：\n1. 只生成这个分段的执行计划。\n2. 明确该分段的目标、情绪走向、关键镜头、冲突升级点。\n3. 不得引入未说明的新主线。\n4. 如需引入新角色或新设定，必须在计划中显式说明其用途。\n5. 如果当前处于结局阶段，必须服从结局阶段要求，不得提前完结。\n6. 必须体现爽点的铺垫、兑现和代价，并为结尾钩子留空间。\n7. 重要配角的关键行为必须符合其优点、缺点与行为逻辑；只有少数具备升华点的人物可以在合适节点推进升华线，不得人人强行拔高。\n8. 直接输出可供写作使用的结构化文本，不要输出 JSON。"
+    },
+    "prompt12_part_write": {
+      "system_prompt": "你是长篇网文的正文作者。你必须严格按计划和设定写当前分段正文，不要擅自改设定；必须遵守人物状态和世界规则。",
+      "user_prompt": "请根据以下材料撰写 [part_name] 的正文。\n\n人物状态绑定：\n[character_state_block]\n\n主角成长体系：\n[growth_system]\n\n写作材料：\n[plan]\n\n风格：\n[novel_style]\n\n注意：\n1. Show, Don't Tell；避免总结、解释文字。\n2. 不得私自修改已知人物核心状态。\n3. 不得无理由新增角色。\n4. 不得无故改变世界规则。\n5. 重要配角的关键行为必须符合其优点、缺点和行为逻辑。\n6. 有少数具备升华点的人物可以在合适情境中推进升华线。\n7. 若处于结局阶段，必须服从该阶段职责。"
+    },
+    "prompt13_part_reflect": {
+      "system_prompt": "你是长篇网文的正文优化编辑。你必须在不改变剧情事实的前提下优化正文，并按要求追加 JSON 回填；不得新增原文没有的重要设定和转折。",
+      "user_prompt": "请在不改变剧情事实的前提下，优化以下正文，并在末尾追加 JSON 回填。\n\n你必须参考以下材料：\n[character_state_block]\n\n写作技法硬性规定：\n1. 强画面感与五感描写：不要说“局势很紧张”，要写“刀锋贴着他的头皮掠过，斩断了一缕头发，寒意直逼后脑”。\n2. 视角限制：紧紧跟随主角（或当前焦点人物）的POV，写他看到的、听到的、心里吐槽的。\n3. 爽感放大器：在冲突爆发和主角展现实力时，必须加入周围人的【反应描写】（震惊、恐惧、不可置信），通过配角的反应来衬托主角的强大/神秘。\n4. 绝对禁止“说明文式”写作：不要有旁边解释性描述，不要在正文里大段背诵人物状态块或世界设定。设定必须在对话和动作中自然带出。如果某个设定这一段用不到，就彻底假装它不存在！\n5. 对话要求：必须为推进剧情而服务，对话要符合人物背景经历性格。\n禁止新增原文没有出现的重要设定和剧情转折。\n先输出优化后的正文，不要解释。\n风格：[novel_style]\n正文如下：\n[draft]\n\n在正文结束后，必须追加一个 JSON 代码块，格式如下：\n```json\n{\n  \"part_summary\": \"本段剧情精简摘要（80-120字)\",\n  \"character_state_updates\": [\n    {\"name\": \"角色名\", \"new_state\": \"更新后的状态\", \"sublimation_status\": \"none/seeded/progressing/completed\"}\n  ]\n}\n```\n额外要求：\n1. part_summary 必须忠于本段实际发生内容。\n2. character_state_updates 只写真正发生变化的人物；如果仅更新升华状态，可不写 new_state，但必须写 sublimation_status。\n3. 如果本段没有人物变化，请返回空数组：\"character_state_updates\": []"
+    },
+    "prompt10_sub_outline": {
+      "system_prompt": "你是剧情执行导演。你必须基于既有设定、人物和上下文规划当前事件，只输出事件缩写与分段大纲；绝对不要直接开始写正文。",
+      "user_prompt": "【一句话梗概】\n[setting]\n\n【主角成长体系】\n[growth_system]\n\n【连载/结局提示】\n[series_note]\n\n【剧情上下文（含前情摘要、最近已完成事件、当前事件、未来事件预告）】\n[full_outline_str]\n【当前世界局势】\n[current_wv]\n【核心设置字典（重要物品/功法/势力）】\n[lorebook_str]\n【事件世界变更】\n[event_world_snapshot_update]\n【事件伏笔变更】\n[event_foreshadow_updates]\n【事件成长变更】\n[event_growth_updates]\n【事件设定库变更】\n[event_lorebook_updates]\n【本期登场人物及当前状态】\n[char_details_str]\n\n【当前撰写核心：事件 [ev_id]】\n地点：[location]\n时间：[time_duration]\n冲突：[conflict]\n剧情大纲：[desc]\n必须埋下的伏笔：[foreshadow]\n- 当前目标：[goal]\n- 主要障碍：[obstacle]\n- 爽点类型：[cool_point_type]\n- 爽点兑现：[payoff_type]\n- 成长回报：[growth_reward]\n- 地位回报：[status_reward]\n- 结尾钩子：[cliffhanger]\n[ending_note]\n\n硬性要求：\n1. 必须遵守当前人物状态、世界规则、设定库与前情。\n2. 必须在分段中落实【事件世界变更/伏笔变更/成长变更/设定库变更】（如有）。\n3. 不得无故引入与主线无关的新角色、新设定。\n4. 分段数量可根据事件内容自由选择 1-3 段，不强制三段式；但各段之间必须有明确推进关系，不能重复同一冲突。\n5. 第 1、2、3 个事件必须各自只分为 1 段，避免开篇被切碎。\n6. 如果处于结局阶段，分段必须符合对应阶段职责。\n7. 不能在非尾声阶段提前写完全部归宿。\n8. 必须围绕当前目标与障碍推进，并明确设计爽点兑现和结尾钩子。\n9. 重要配角的关键行为必须符合其优点、缺点与行为逻辑；如某人物具备升华点，只能在合适节点推进，不得强行拔高或人人都有高光。\n\n请先给当前事件生成一个【事件缩写】：\n- 长度 5-10 个字\n- 要适合做章节名\n- 要能概括当前事件核心，不要空泛\n\n然后再为当前【事件 [ev_id]】设计详细的“分段大纲”。\n- 可按事件复杂度拆为 1 段、2 段或 3 段。\n- 第 1、2、3 个事件必须只输出 1 段。\n- 段名请直接写“第1段 / 第2段 / 第3段”。\n请按如下格式输出：\n事件缩写：xxxxxx\n第1段：...\n第2段：...\n第3段：...\n如果不足 3 段，就只输出实际需要的段数。\n绝对不要直接开始写正文！"
+    }
+  },
+  "default_style": "细节入微，不生硬陈述，招式要凌厉，侠骨柔情",
+  "default_target_words": 1000000,
+  "default_export_path": "F:\\项目\\小说gpt版"
+}
